@@ -87,10 +87,10 @@ class Router
      */
     public static function next($default)
     {
+        $next = array_shift(self::$next);
         if (!empty(self::$next)) {
             $next = $default;
         } else {
-            $next = array_shift(self::$next);
 
             $file = "./pages/" . implode("/", self::$path) . "/$next.php";
             $directory = "./pages/" . implode("/", self::$path) . "/$next/";
@@ -136,5 +136,12 @@ class Router
             header("Location: " . self::$rootDir . $location);
         else header("Location: " . self::$rootDir . $location . "?" . http_build_query($getVariables));
         exit;
+    }
+
+    public static function cancel()
+    {
+        array_pop(self::$path);
+        $location = implode("/", self::$path);
+        self::redirect($location);
     }
 }
