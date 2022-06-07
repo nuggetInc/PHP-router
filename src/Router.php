@@ -36,14 +36,28 @@ class Router
      * 
      * @param string $rootDir The root of the project.
      * 
+     * @param string $default The default page if next is empty or invalid.
+     * 
      * @return void
      */
-    public static function start($path, $rootDir = "")
+    public static function start($path, $rootDir, $default)
     {
         self::$path = array();
-        self::$next = explode("/", trim($path, "/"));
+        self::$next = preg_split("/\//", trim($path, "/"), -1, PREG_SPLIT_NO_EMPTY);
         self::$rootDir = $rootDir;
 
+        self::next($default);
+        self::all();
+    }
+
+    /**
+     * Finish requiring all pages here.
+     * Can be used to place all pages inside the current page.
+     * 
+     * @return void
+     */
+    public static function all()
+    {
         while (!empty(self::$next)) {
             $next = array_shift(self::$next);
 
@@ -63,7 +77,7 @@ class Router
 
     /**
      * Forcess the router to route to the next file.
-     * Can be used to place a subpage inside its parent
+     * Can be used to place a subpage inside its parent.
      * 
      * @param string $default The default page if next is empty or invalid.
      * 
