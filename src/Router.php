@@ -34,7 +34,7 @@ class Router
      * 
      * @param string $path The path to route. The path shoudn't contain the root directory
      * 
-     * @param string $rootDir The root of the project. e.g. "/example/root/"
+     * @param string $rootDir The root of the project. e.g. "/example/root"
      * 
      * @param string $default The default page if next is empty or invalid.
      * 
@@ -153,6 +153,12 @@ class Router
         exit;
     }
 
+    /**
+     * Redirects to the parent of the current page.
+     * Can be used as a last resort to stop unauthorized people from accessing a page.
+     * 
+     * @return void
+     */
     public static function cancel()
     {
         array_pop(self::$path);
