@@ -152,17 +152,4 @@ class Router
         else header("Location: " . self::$rootDir . $location . "?" . http_build_query($getVariables));
         exit;
     }
-
-    /**
-     * Redirects to the parent of the current page.
-     * Can be used as a last resort to stop unauthorized people from accessing a page.
-     * 
-     * @return void
-     */
-    public static function cancel()
-    {
-        array_pop(self::$path);
-        $location = implode("/", self::$path);
-        self::redirect($location);
-    }
 }
