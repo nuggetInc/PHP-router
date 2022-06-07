@@ -32,18 +32,20 @@ class Router
     /**
      * Starts the routing process.
      * 
-     * @param string $path The path to route.
+     * @param string $path The path to route. The path shoudn't contain the root directory
      * 
-     * @param string $rootDir The root of the project.
+     * @param string $rootDir The root of the project. e.g. "/example/root/"
      * 
      * @param string $default The default page if next is empty or invalid.
      * 
      * @return void
      */
-    public static function start($path, $rootDir, $default)
+    public static function start($default, $rootDir = "")
     {
+        $url = substr($_SERVER["REDIRECT_URL"], strlen($rootDir));
+
         self::$path = array();
-        self::$next = preg_split("/\//", trim($path, "/"), -1, PREG_SPLIT_NO_EMPTY);
+        self::$next = preg_split("/\//", $url, -1, PREG_SPLIT_NO_EMPTY);
         self::$rootDir = $rootDir;
 
         self::next($default);
@@ -93,9 +95,7 @@ class Router
             $file = "./pages/" . implode("/", self::$path) . "/$next.php";
             $directory = "./pages/" . implode("/", self::$path) . "/$next/";
 
-            if (file_exists($file) || file_exists($directory)) {
-                array_push(self::$path, $next);
-            } else {
+            if (!file_exists($file) && !file_exists($directory)) {
                 $next = $default;
                 self::$next = array();
             }
@@ -106,5 +106,35 @@ class Router
         require($file); // If this returns an error then you have set a default which doesn't exist.
 
         return $next;
+    }
+
+    /**
+     * Reload the Current page.
+     * 
+     * @param array $getVariables Array of key value pairs to pass with GET
+     * 
+     * @return void
+     */
+    public static function reload($getVariables = null)
+    {
+        $location = implode("/", self::$path);
+        self::redirect($location, $getVariables);
+    }
+
+    /**
+     * Redirect to the given page.
+     * 
+     * @param string $location Array of key value pairs to pass with GET
+     * 
+     * @param array $getVariables Array of key value pairs to pass with GET
+     * 
+     * @return void
+     */
+    public static function redirect($location, $getVariables = null)
+    {
+        if (empty($getVariables))
+            header("Location: " . self::$rootDir . $location);
+        else header("Location: " . self::$rootDir . $location . "?" . http_build_query($getVariables));
+        exit;
     }
 }
