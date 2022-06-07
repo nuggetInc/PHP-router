@@ -88,7 +88,7 @@ class Router
     public static function next($default)
     {
         $next = array_shift(self::$next);
-        if (!empty(self::$next)) {
+        if ($next === null) {
             $next = $default;
         } else {
             $file = "./pages/" . implode("/", self::$path) . "/$next.php";
@@ -99,7 +99,7 @@ class Router
                 self::$next = array();
             }
         }
-        array_push(self::$path, $default);
+        array_push(self::$path, $next);
 
         $file = "./pages/" . implode("/", self::$path) . ".php";
         require($file); // If this returns an error then you have set a default which doesn't exist.
