@@ -78,7 +78,7 @@ class Router
     }
 
     /**
-     * Forcess the router to route to the next file.
+     * Forcess the router to route to the next page.
      * Can be used to place a subpage inside its parent.
      * 
      * @param string $default The default page if next is empty or invalid.
@@ -91,7 +91,6 @@ class Router
         if (!empty(self::$next)) {
             $next = $default;
         } else {
-
             $file = "./pages/" . implode("/", self::$path) . "/$next.php";
             $directory = "./pages/" . implode("/", self::$path) . "/$next/";
 
@@ -106,6 +105,22 @@ class Router
         require($file); // If this returns an error then you have set a default which doesn't exist.
 
         return $next;
+    }
+
+    /**
+     * Forcess the router to route to the given page.
+     * 
+     * @param string $next The page to require.
+     * 
+     * @return void
+     */
+    public static function forcedNext($next)
+    {
+        self::$next = array();
+        array_push(self::$path, $next);
+
+        $file = "./pages/" . implode("/", self::$path) . ".php";
+        require($file); // If this returns an error then you have set a default which doesn't exist.
     }
 
     /**
