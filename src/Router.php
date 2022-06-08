@@ -148,8 +148,8 @@ class Router
     public static function redirect($location, $getVariables = null)
     {
         if (empty($getVariables))
-            header("Location: " . self::$rootDir . $location);
-        else header("Location: " . self::$rootDir . $location . "?" . http_build_query($getVariables));
+            header("Location: " . self::$rootDir . "/" . $location);
+        else header("Location: " . self::$rootDir . "/" . $location . "?" . http_build_query($getVariables));
         exit;
     }
 }
